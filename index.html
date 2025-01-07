@@ -3,70 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
         <title>Student Bus Tracker</title>
-        <style>
-            .tab {
-                overflow: hidden;
-                border: 1px solid #ccc;
-                background-color: #f1f1f1;
-            }
-
-            .tab button {
-                background-color: inherit;
-                float: left;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                padding: 14px 16px;
-                transition: 0.3s;
-            }
-
-            .tab button:hover {
-                background-color: #ddd;
-            }
-
-            .tab button.active {
-                background-color: #ccc;
-            }
-
-            .tabcontent {
-                display: none;
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-top: none;
-            }
-
-            .student-card {
-                border: 1px solid #ddd;
-                margin: 10px 0;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .student-card:hover {
-                transform: scale(1.01);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            }
-
-            .none {
-                background-color: #fff;
-            }
-
-            .checked-in {
-                background-color: #90ee90;
-            }
-
-            .checked-out {
-                background-color: #ffb6c1;
-            }
-
-            .status-indicator {
-                font-weight: bold;
-                margin-top: 5px;
-            }
-        </style>
     </head>
     <body>
         <h1>Student Bus Tracker</h1>
@@ -79,153 +17,27 @@
                 Bus Route View
             </button>
         </div>
+        <div id="navigation title">
+            <div id="classroom" class="tabcontent">
+                <h2>Classroom View</h2>
+                <select id="classSelect" onchange="filterByClass()">
+                    <option value="all">All Classes</option>
+                    <option value="1A">Class 1A</option>
+                    <option value="1B">Class 1B</option>
+                </select>
+                <div id="classroomList"></div>
+            </div>
 
-        <div id="classroom" class="tabcontent">
-            <h2>Classroom View</h2>
-            <select id="classSelect" onchange="filterByClass()">
-                <option value="all">All Classes</option>
-                <option value="1A">Class 1A</option>
-                <option value="1B">Class 1B</option>
-            </select>
-            <div id="classroomList"></div>
+            <div id="busroute" class="tabcontent">
+                <h2>Bus Route View</h2>
+                <select id="routeSelect" onchange="filterByRoute()">
+                    <option value="all">All Routes</option>
+                    <option value="Route1">Route 1</option>
+                    <option value="Route2">Route 2</option>
+                </select>
+                <div id="busrouteList"></div>
+            </div>
         </div>
-
-        <div id="busroute" class="tabcontent">
-            <h2>Bus Route View</h2>
-            <select id="routeSelect" onchange="filterByRoute()">
-                <option value="all">All Routes</option>
-                <option value="Route1">Route 1</option>
-                <option value="Route2">Route 2</option>
-            </select>
-            <div id="busrouteList"></div>
-        </div>
-
-        <script>
-            // Sample student data
-            let students = [
-                {
-                    id: 1,
-                    name: 'John Doe',
-                    classroom: '1A',
-                    busRoute: 'Route1',
-                    status: 'none',
-                },
-                {
-                    id: 2,
-                    name: 'Jane Smith',
-                    classroom: '1A',
-                    busRoute: 'Route2',
-                    status: 'none',
-                },
-                {
-                    id: 3,
-                    name: 'Bob Johnson',
-                    classroom: '1B',
-                    busRoute: 'Route1',
-                    status: 'none',
-                },
-                // Add more students as needed
-            ]
-
-            function toggleStatus(studentId) {
-                const student = students.find((s) => s.id === studentId)
-                if (student) {
-                    // Cycle through states: none -> checked-in -> checked-out -> none
-                    switch (student.status) {
-                        case 'none':
-                            student.status = 'checked-in'
-                            break
-                        case 'checked-in':
-                            student.status = 'checked-out'
-                            break
-                        case 'checked-out':
-                            student.status = 'none'
-                            break
-                    }
-                    filterByClass()
-                    filterByRoute()
-                }
-            }
-
-            // Open tab view
-            function openView(viewName) {
-                let tabcontent = document.getElementsByClassName('tabcontent')
-                for (let i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = 'none'
-                }
-
-                let tablinks = document.getElementsByClassName('tablinks')
-                for (let i = 0; i < tablinks.length; i++) {
-                    tablinks[i].className = tablinks[i].className.replace(
-                        ' active',
-                        ''
-                    )
-                }
-
-                document.getElementById(viewName).style.display = 'block'
-                event.currentTarget.className += ' active'
-
-                if (viewName === 'classroom') {
-                    filterByClass()
-                } else {
-                    filterByRoute()
-                }
-            }
-
-            // Filter students by classroom
-            function filterByClass() {
-                const selectedClass =
-                    document.getElementById('classSelect').value
-                const filteredStudents =
-                    selectedClass === 'all'
-                        ? students
-                        : students.filter(
-                              (student) => student.classroom === selectedClass
-                          )
-                displayStudents('classroomList', filteredStudents)
-            }
-
-            // Filter students by bus route
-            function filterByRoute() {
-                const selectedRoute =
-                    document.getElementById('routeSelect').value
-                const filteredStudents =
-                    selectedRoute === 'all'
-                        ? students
-                        : students.filter(
-                              (student) => student.busRoute === selectedRoute
-                          )
-                displayStudents('busrouteList', filteredStudents)
-            }
-
-            // Display students in the specified container
-            function displayStudents(containerId, studentList) {
-                const container = document.getElementById(containerId)
-                container.innerHTML = ''
-
-                studentList.forEach((student) => {
-                    const card = document.createElement('div')
-                    card.className = `student-card ${student.status}`
-                    card.onclick = () => toggleStatus(student.id)
-
-                    let statusText = 'Not Checked'
-                    if (student.status === 'checked-in')
-                        statusText = 'Arrived at School'
-                    if (student.status === 'checked-out')
-                        statusText = 'Left on Bus'
-
-                    card.innerHTML = `
-                    <h3>${student.name}</h3>
-                    <p>Class: ${student.classroom}</p>
-                    <p>Bus Route: ${student.busRoute}</p>
-                    <p class="status-indicator">Status: ${statusText}</p>
-                `
-                    container.appendChild(card)
-                })
-            }
-
-            // Initialize the first tab
-            document.getElementsByClassName('tablinks')[0].click()
-        </script>
+        <script src="scripts.js"></script>
     </body>
 </html>
