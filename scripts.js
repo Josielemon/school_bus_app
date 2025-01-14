@@ -22,7 +22,9 @@ let students = [
 const classroomList = document.getElementById('classroomList')
 const busrouteList = document.getElementById('busrouteList')
 
-function toggleStatus() {}
+function toggleStatus(studentName) {
+    console.log('pressed: ', studentName)
+}
 
 // Open tab view
 function openView(viewName) {
@@ -67,28 +69,30 @@ function changeRoute() {
 // Display students in the specifiec container
 function displayStudents(containerId, studentList) {
     const container = containerId
+    console.log('container tab chosen: ', containerId)
     container.innerHTML = ''
 
     studentList.forEach((student) => {
-        const studentCard = (innerHTML = '')
+        const studentCard = ''
         studentCard.onclick = function () {
             toggleStatus(student.name)
         }
-        let statusText = 'Not Checked'
-        if (student.status === 'checked-in') statusText = 'Arrived at School'
-        if (student.status === 'checked-out') statusText = 'Left on Bus'
+        // let statusText = 'Not Checked'
+        // if (student.status === 'checked-in') statusText = 'Arrived at School'
+        // if (student.status === 'checked-out') statusText = 'Left on Bus'
 
         studentCard.innerHTML = `
         <div id='student-card ${student.status}'>
         <h3>${student.name}</h3>
         <p>Class: ${student.classroom}</p>
         <p>Bus Route: ${student.busRoute}</p>
-        <p class="status-indicator">Status: ${statusText}</p>
+        <p class="status-indicator">Status: {statusText}</p>
         <p><button onclick="changeRoute()">Change route</button></p>
         </div>
     `
-        container.appendChild(card)
+        container.innerHTML += studentCard
     })
 }
 // // Initialize the first tab
 document.getElementsByClassName('tablinks')[0].click()
+//coment
